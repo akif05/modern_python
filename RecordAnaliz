@@ -1,0 +1,31 @@
+Big Idea: Analyze public records to identify congressional voting bloks
+
+Preparation for Cluster Analisis of Voting Blocks
+=================================================
+
+# defaultdict for accumalating data (tabulating)
+# defaultdict for reversing a one-to-many mapping
+# glob
+# reading files with an encoding
+# using next() or islice() to remove elements from an iterator
+# csv reader
+# tuple unpacking
+# looping idioms: enumarate, zip, reversed, sorted, set
+# incrementing instances of Counter
+# assertions
+
+Application to Congresional Voting Dataset
+=================================================
+
+# Accumulate votting record for each U.S. Senator for the 114th Congress.
+# Use k-means to identify clusters of like voters
+# Display the cluster and their actual party affilations
+
+Discuss Benefit and Weaknesses of K-menas
+=================================================
+
+# Ideally, the votes should be weighted by importance
+# What is the proper way to handle non-votes?
+# How are results blased by only including bills that passed?
+# Method assumes patterns / affiliations do not change over time
+# Binary vectors give many equidistance paths

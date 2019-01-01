@@ -1,0 +1,846 @@
+Writing code the Pythonic way
+
+1 Pythonic?
+
+1.1 Speak you English?
+
+1.2 What am I?
+
+I am programmer.
+1.2.1 Better
+
+I am a programmer.
+1.3 Idiomatic usage
+
+More readable,
+More beautiful,
+Faster.
+2 Iterating
+
+2.1 Looping over a range of numbers
+
+for i in [0,1,2,3,4,5]:
+    print(i**2)
+#+RESULTS[166bb24ee8c7a449d62c9ad3785a3ac0c7d68b85]:
+
+0
+1
+4
+9
+16
+25
+2.1.1 Better
+
+for i in range(6):
+    print(i**2)
+#+RESULTS[d97253be7d418f2cbdc831381aa7843724b132d7]:
+
+0
+1
+4
+9
+16
+25
+2.1.2 Python 2 note
+
+In Python 2 the range function constructs a real list in memory and returns it. In Python 3 range creates an iterator which produces the values one at a time which is quicker and saves memory. The old is achieved with list(range(n)) in Python 3.
+
+In Python 2 the xrange function exists to create an iterator instead of a list and is equivalent to range in Python 3.
+
+2.2 Looping over a collection
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)):
+    print(colors[i])
+#+RESULTS[c5539971279013100731d4362bfcc30604d3229c]:
+
+red
+green
+blue
+yellow
+2.2.1 Better
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for color in colors:
+    print(color)
+#+RESULTS[e3a9d3e8a53f963b38bc22eab97c6db713986350]:
+
+red
+green
+blue
+yellow
+2.3 Looping backwards
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)-1, -1, -1):
+    print(colors[i])
+#+RESULTS[c9cec3b172581122abdcaf2e9253d0ca2eb2c8d5]:
+
+yellow
+blue
+green
+red
+2.3.1 Better
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for color in reversed(colors):
+    print(color)
+2.4 Looping over a collection and indices
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)):
+    print(i, '--->', colors[i])
+#+RESULTS[a67844ce83e45d93b829a56c1758b863f0393915]:
+
+0 ---> red
+1 ---> green
+2 ---> blue
+3 ---> yellow
+2.4.1 Better
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i, color in enumerate(colors):
+    print(i, '--->', color)
+2.5 Looping over two collections
+
+names = ['raymond', 'rachel', 'matthew']
+colors = ['red', 'green', 'blue', 'yellow']
+
+n = min(len(names), len(colors))
+for i in range(n):
+    print(names[i], '--->', colors[i])
+#+RESULTS[c662442b8db17d5223202aecccc16140900b2b51]:
+
+raymond ---> red
+rachel ---> green
+matthew ---> blue
+2.5.1 Better
+
+names = ['raymond', 'rachel', 'matthew']
+colors = ['red', 'green', 'blue', 'yellow']
+
+for name, color in zip(names, colors):
+    print(name, '--->', color)
+2.5.2 Python 2 note
+
+In Python 2, zip creates a new list in memory. izip instead creates an iterator which is more efficient and equivalent to zip in Python 3.
+
+2.6 Looping in sorted order
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+print("Forward sorted order:")
+for color in sorted(colors):
+    print(color)
+#+RESULTS[b64b409aa68b20db351d1e619cc453e950371872]:
+
+Forward sorted order:
+blue
+green
+red
+yellow
+colors = ['red', 'green', 'blue', 'yellow']
+
+print("Backwards sorted order:")
+for color in sorted(colors, reverse=True):
+    print(color)
+#+RESULTS[92ad74090ba47803ca7f47564921f6ef3ecd50e4]:
+
+Backwards sorted order:
+yellow
+red
+green
+blue
+2.7 Custom sort order
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+def compare_length(l1, l2):
+    if len(l1) < len(l2): return -1
+    if len(l1) > len(l2): return 1
+    return 0
+
+print("With custom order:")
+for color in sorted(colors, cmp=compare_length):
+    print(color)
+colors = ['red', 'green', 'blue', 'yellow']
+
+print("With custom order:")
+for color in sorted(colors, key=len):
+    print(color)
+#+RESULTS[c3ae2d155fa205969f59c36193b3f1a497a4cb67]:
+
+With custom order:
+red
+blue
+green
+yellow
+2.7.1 Python 2 note
+
+In Python 2 the sorted function had the cmp parameter which took a comparison function as an alternative way to define a custom sorting order. This was removed in Python 3 as the key parameter is more beautiful and faster.
+
+2.8 Call a function until a sentinel value
+
+import io
+buf = io.StringIO("string")
+chars = []
+
+while True:
+    char = buf.read(1)
+    if char == "":
+        break
+    chars.append(char)
+
+print(chars)
+#+RESULTS[e811bbf3b166cf835f8f2c0b94aa6fbd9c4cad66]:
+
+['s', 't', 'r', 'i', 'n', 'g']
+2.8.1 Better
+
+import io
+from functools import partial
+buf = io.StringIO("string")
+chars = []
+
+for char in iter(partial(buf.read, 1), ""):
+    chars.append(char)
+
+print(chars)
+#+RESULTS[761fc9130f5bd6fa94fb1fc20fe5557224e8839b]:
+
+['s', 't', 'r', 'i', 'n', 'g']
+2.9 Distinguishing multiple exit points in loops
+
+def find(seq, target):
+    found = False
+    for i, value in enumerate(seq):
+        if value == target:
+            found = True
+            break
+    if not found:
+        return -1
+    return i
+
+seq = [1,3,4]
+print(find(seq, 3))
+print(find(seq, 2))
+#+RESULTS[17a1b97e45e74f36e9c478b4a9d2b09fd85fbc79]:
+
+1
+-1
+2.9.1 Better
+
+def find(seq, target):
+    for i, value in enumerate(seq):
+        if value == target:
+            break
+    else:
+        return -1
+    return i
+
+seq = [1,3,4]
+print(find(seq, 3))
+print(find(seq, 2))
+#+RESULTS[b609ce17bec09921a46f3968a6c10ea18558a722]:
+
+1
+-1
+2.10 List comprehensions
+
+squares = []
+
+for i in range(10):
+    if i % 3 == 0:
+        squares.append(i ** 2)
+
+print(squares)
+#+RESULTS[4428577695498e88ee67e65166d3fc255492acf6]:
+
+[0, 9, 36, 81]
+2.10.1 Better
+
+squares = [i ** 2 for i in range(10) if i % 3 == 0]
+
+print(squares)
+#+RESULTS[14df501717361cf637e9e9d95eb62590fe01482d]:
+
+[0, 9, 36, 81]
+2.11 Generator expressions
+
+result = []
+
+for i in range(10):
+    s = i ** 2
+    result.append(s)
+print(sum(result))
+#+RESULTS[c89186e281dbb4b97a5573c94c2152f869004fb1]:
+
+285
+2.11.1 Better
+
+print(sum(i**2 for i in range(10)))
+#+RESULTS[b702ac13ea1b513c64ed454461a8f8ae1ea69cda]:
+
+285
+3 Dictionary skills
+
+3.1 Looping over dictionary keys
+
+d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+for k in d:
+    print(k)
+
+for k in list(d.keys()):
+    if k.startswith('r'):
+        del d[k]
+
+print(d)
+#+RESULTS[9d225c7d7caa633548706a782111c1c30a3222b3]:
+
+matthew
+rachel
+raymond
+{'matthew': 'blue'}
+3.1.1 Python 2 note
+
+In Python 2, dict.keys() returned a copy of the dictionary keys. In Python 3 it returns an iterator so list must be used to create the copy. You should never try to modify the collection that you are iterating over.
+
+3.2 Looping over dictionary keys and values
+
+d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+for k in d:
+    print(k, '--->', d[k])
+#+RESULTS[ef25081bd9f523bfd97bcd1ebb2c0d6a72168e7c]:
+
+matthew ---> blue
+rachel ---> green
+raymond ---> red
+3.2.1 Better
+
+d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+for k, v in d.items():
+    print(k, '--->', v)
+#+RESULTS[bb4925f717d14d8ef10bb0bdfad745ec8b0bc943]:
+
+matthew ---> blue
+rachel ---> green
+raymond ---> red
+3.2.2 Python 2 note
+
+In Python 2, dict.items() creates a list in memory and dict.iteritems() exists which is equivalent to Python 3 dict.items().
+
+3.3 Construct a dictionary from pairs
+
+names = ['raymond', 'rachel', 'matthew']
+colors = ['red', 'green', 'blue']
+
+d = dict(zip(names, colors))
+print(d)
+#+RESULTS[6347e604abaeea7cf7b2e5629c357dcf76169dd1]:
+
+{'raymond': 'red', 'rachel': 'green', 'matthew': 'blue'}
+3.4 Counting with dictionaries
+
+colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+d = {}
+for color in colors:
+    if color not in d:
+        d[color] = 0
+    d[color] += 1
+
+print(d)
+#+RESULTS[25459b41c262c5be74ab64413ac9f2852f718b43]:
+
+{'red': 3, 'green': 2, 'blue': 1}
+3.4.1 Better
+
+colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+d = {}
+for color in colors:
+    d[color] = d.get(color, 0) + 1
+
+print(d)
+#+RESULTS[ae71c0a9a3020750b2a9c458ab9ffa87981433f6]:
+
+{'red': 3, 'green': 2, 'blue': 1}
+import collections
+colors = ['red', 'green', 'red', 'blue', 'green', 'red']
+
+d = collections.defaultdict(int)
+for color in colors:
+    d[color] += 1
+
+print(d)
+#+RESULTS[87711fe0b683cfd8c971115f7c78446712818749]:
+
+defaultdict(<class 'int'>, {'red': 3, 'green': 2, 'blue': 1})
+3.5 Grouping with dictionaries
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+# group by name length
+d = {}
+for name in names:
+    key = len(name)
+    if key not in d:
+        d[key] = []
+    d[key].append(name)
+
+print(d)
+#+RESULTS[a8bb0ade7d635529fc6307ef77a725d6b9df86d7]:
+
+{7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
+3.5.1 Better
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+d = {}
+for name in names:
+    key = len(name)
+    d.setdefault(key, []).append(name)
+
+print(d)
+#+RESULTS[3cdb87630c79004119c109be57a83485531212c8]:
+
+{7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']}
+import collections
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+d = collections.defaultdict(list)
+for name in names:
+    key = len(name)
+    d[key].append(name)
+
+print(d)
+#+RESULTS[fdbc7034152be76e2226a48824090c532fa7a4dc]:
+
+defaultdict(<class 'list'>, {7: ['raymond', 'matthew', 'melissa', 'charlie'], 6: ['rachel', 'judith'], 5: ['roger', 'betty']})
+3.6 Pop items from dictionary atomically
+
+d = {'matthew': 'blue', 'rachel': 'green', 'raymond': 'red'}
+
+while d:
+    key, value = d.popitem()
+    print(key, '-->', value)
+
+print(d)
+#+RESULTS[201de6d395d8f384d150b56beb06b97481389d26]:
+
+raymond --> red
+rachel --> green
+matthew --> blue
+{}
+3.7 Linking dictionaries
+
+import os, argparse
+
+defaults = {'color': 'red', 'user': 'guest'}
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', '--user')
+parser.add_argument('-c', '--color')
+namespace = parser.parse_args([])
+command_line_args = {k:v for k, v in vars(namespace).items() if v}
+
+d = defaults.copy()
+d.update(os.environ)
+d.update(command_line_args)
+
+print(d)
+#+RESULTS[7a4772507fda3f7ef88a00501c6cc8b1bb44d261]:
+
+{'color': 'red', 'user': 'guest', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'XDG_MENU_PREFIX': 'gnome-', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'LANG': 'en_GB.UTF-8', 'DISPLAY': ':0', 'WORKON_HOME': '/home/vagrant/venvs', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'USERNAME': 'vagrant', 'XDG_VTNR': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'XDG_SESSION_ID': '1', 'USER': 'vagrant', 'DESKTOP_SESSION': 'ubuntu', 'QT4_IM_MODULE': 'xim', 'TEXTDOMAINDIR': '/usr/share/locale/', 'WAYLAND_DISPLAY': 'wayland-0', 'FTP_PROXY': '', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'HOME': '/home/vagrant', 'JOURNAL_STREAM': '9:18267', 'TEXTDOMAIN': 'im-config', 'XDG_SESSION_TYPE': 'wayland', 'https_proxy': 'http://10.0.2.2:3128/', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SESSION_DESKTOP': 'ubuntu', 'GJS_DEBUG_OUTPUT': 'stderr', 'PROJECT_HOME': '/home/vagrant/vmshared', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'IPY_TEST_SIMPLE_PROMPT': '1', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'SHELL': '/bin/bash', 'TERM': 'dumb', 'QT_IM_MODULE': 'xim', 'XMODIFIERS': '@im=ibus', 'IM_CONFIG_PHASE': '2', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'XDG_SEAT': 'seat0', 'SHLVL': '3', 'LANGUAGE': 'en_GB:en', 'GDMSESSION': 'ubuntu', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'LOGNAME': 'vagrant', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'ftp_proxy': '', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GTK_IM_MODULE': 'ibus'}
+3.7.1 Better
+
+import os, argparse
+from collections import ChainMap
+
+defaults = {'color': 'red', 'user': 'guest'}
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', '--user')
+parser.add_argument('-c', '--color')
+namespace = parser.parse_args([])
+command_line_args = {k:v for k, v in vars(namespace).items() if v}
+
+d = ChainMap(command_line_args, os.environ, defaults)
+
+print(dict(d))
+#+RESULTS[d829b073186c909ea30cdd5b52c13e4f05b4c091]:
+
+{'WORKON_HOME': '/home/vagrant/venvs', 'SSL_CERT_FILE': '/etc/ssl/certs/ca-certificates.crt', 'XDG_VTNR': '1', 'SHELL': '/bin/bash', 'QT4_IM_MODULE': 'xim', 'HTTPS_PROXY': 'http://10.0.2.2:3128/', 'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XDG_SESSION_TYPE': 'wayland', 'VIRTUAL_ENV': '/home/vagrant/venvs/risk-wall', 'TERM': 'dumb', 'IM_CONFIG_PHASE': '2', 'USERNAME': 'vagrant', 'PWD': '/home/vagrant/vmshared/beautiful-python', 'GTK_IM_MODULE': 'ibus', 'http_proxy': 'http://10.0.2.2:3128/', 'XDG_SEAT': 'seat0', 'user': 'guest', 'GDMSESSION': 'ubuntu', 'TEXTDOMAINDIR': '/usr/share/locale/', 'JOURNAL_STREAM': '9:18267', 'PATH': '/home/vagrant/venvs/risk-wall/bin:/home/vagrant/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/shims:/home/vagrant/.pyenv/libexec:/home/vagrant/.pyenv/plugins/python-build/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenvwrapper/bin:/home/vagrant/.pyenv/plugins/pyenv-virtualenv/bin:/home/vagrant/.pyenv/plugins/pyenv-update/bin:/home/vagrant/.pyenv/plugins/pyenv-installer/bin:/home/vagrant/.pyenv/plugins/pyenv-doctor/bin:/home/vagrant/.pyenv/shims:~/.pyenv/bin:/home/vagrant/bin:/home/vagrant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'no_proxy': 'localhost,127.0.0.1,10.0.2.2', 'DESKTOP_SESSION': 'ubuntu', 'LANGUAGE': 'en_GB:en', 'color': 'red', 'FTP_PROXY': '', 'XDG_SESSION_ID': '1', 'ftp_proxy': '', 'USER': 'vagrant', 'XDG_MENU_PREFIX': 'gnome-', 'WAYLAND_DISPLAY': 'wayland-0', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'GJS_DEBUG_OUTPUT': 'stderr', 'DISPLAY': ':0', 'SHLVL': '3', 'SESSION_MANAGER': 'local/ubuntu-vagrant:@/tmp/.ICE-unix/728,unix/ubuntu-vagrant:/tmp/.ICE-unix/728', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'NO_PROXY': 'localhost,127.0.0.1,10.0.2.2', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '1961', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'QT_IM_MODULE': 'xim', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', '_': '/home/vagrant/venvs/risk-wall/bin/python', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'LOGNAME': 'vagrant', 'IPY_TEST_SIMPLE_PROMPT': '1', 'CLUTTER_IM_MODULE': 'xim', 'HTTP_PROXY': 'http://10.0.2.2:3128/', 'https_proxy': 'http://10.0.2.2:3128/', 'GIO_LAUNCHED_DESKTOP_FILE': '/home/vagrant/.local/share/applications/emacs.desktop', 'PROJECT_HOME': '/home/vagrant/vmshared', 'TEXTDOMAIN': 'im-config', 'XMODIFIERS': '@im=ibus', 'LANG': 'en_GB.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'HOME': '/home/vagrant'}
+3.7.2 Python 2 note
+
+ChainMap was introduced in Python 3.3. There is a package on pypi for earlier versions of Python.
+
+4 Improving clarity
+
+4.1 Clarify function calls with keyword arguments
+
+twitter_search = lambda *args: False
+twitter_search('@obama', False, 20, True)
+4.1.1 Better
+
+twitter_search = lambda *args, **kwargs: False
+twitter_search('@obama', retweets=False,
+               numtweets=20, popular=True)
+4.2 Clarify multiple return values with named tuples
+
+def test():
+    return (0, 4)
+
+print(test())
+#+RESULTS[d57024f67ec03e7638b454223820524892af926e]:
+
+(0, 4)
+4.2.1 Better
+
+from collections import namedtuple
+
+TestResult = namedtuple("TestResult", ["failed", "attempted"])
+
+def test():
+    return TestResult(failed=0, attempted=4)
+
+print(test())
+#+RESULTS[01c210300e933e4c4db024e56f068ad6b0033c3f]:
+
+TestResult(failed=0, attempted=4)
+4.3 Unpacking sequences
+
+p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
+
+fname = p[0]
+lname = p[1]
+age = p[2]
+email = p[3]
+
+print(fname, lname, age, email)
+#+RESULTS[06ec3a21176ffb2d1c5976cb992da95a7e60f795]:
+
+Raymond Hettinger 48 python@example.com
+4.3.1 Better
+
+p = 'Raymond', 'Hettinger', 0x30, 'python@example.com'
+
+fname, lname, age, email = p
+
+print(fname, lname, age, email)
+#+RESULTS[54933fe9ca1a2b4cf0bbd81feadc0ad1618ddcb2]:
+
+Raymond Hettinger 48 python@example.com
+4.4 Updating multiple state variables
+
+def fibonacci(n):
+    x = 0
+    y = 1
+    for i in range(n):
+        print(x)
+        t = y
+        y = x + y
+        x = t
+fibonacci(10)
+#+RESULTS[accdeac8ac8001b6660afecb544a9f9a5e42e9c7]:
+
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+4.4.1 Better
+
+def fibonacci(n):
+    x, y = 0, 1
+    for i in range(n):
+        print(x)
+        x, y = y, x + y
+fibonacci(10)
+#+RESULTS[e2bfcdf6685696f3ecc1d065dadaf7664fe656c3]:
+
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+4.5 Simultaneous state updates
+
+influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
+
+tmp_x = x + dx * t
+tmp_y = y + dy * t
+tmp_dx = influence(m, x, y, dx, dy, 'x')
+tmp_dy = influence(m, x, y, dx, dy, 'y')
+x = tmp_x
+y = tmp_y
+dx = tmp_dx
+dy = tmp_dy
+4.5.1 Better
+
+influence, x, y, dx, dy, t, m = lambda *args: 0, 0, 0, 0, 0, 0, 0
+
+x, y, dx, dy = (x + dx * t,
+                y + dy * t,
+                influence(m, x, y, dx, dy, 'x'),
+                influence(m, x, y, dx, dy, 'y'))
+5 Efficiency
+
+5.1 Concatenating strings
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+s = names[0]
+for name in names[1:]:
+    s += ', ' + name
+print(s)
+#+RESULTS[0ab4f9e69a56e407e7fe50fda283522ce82a8921]:
+
+raymond, rachel, matthew, roger, betty, melissa, judith, charlie
+5.1.1 Better
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+print(', '.join(names))
+#+RESULTS[a8698625e30425d99e350421105770f637428fe2]:
+
+raymond, rachel, matthew, roger, betty, melissa, judith, charlie
+5.2 Updating sequences
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+del names[0]
+names.pop(0)
+names.insert(0, 'mark')
+
+print(names)
+#+RESULTS[779781452fe29a7ec4dcb40709019855b9d0ea99]:
+
+['mark', 'matthew', 'roger', 'betty', 'melissa', 'judith', 'charlie']
+5.2.1 Better
+
+from collections import deque
+
+names = deque(['raymond', 'rachel', 'matthew', 'roger',
+               'betty', 'melissa', 'judith', 'charlie'])
+
+del names[0]
+names.popleft()
+names.appendleft('mark')
+
+print(list(names))
+#+RESULTS[4d241585e8bb12b70ca1d8e73827d525609fbdf2]:
+
+['mark', 'matthew', 'roger', 'betty', 'melissa', 'judith', 'charlie']
+6 Decorators and context managers
+
+6.1 Using decorators to factor out administrative logic
+
+def web_lookup(url, saved={}):
+    if url in saved:
+        return saved[url]
+    page = urllib.urlopen(url).read()
+    saved[url] = page
+    return page
+6.1.1 Better
+
+import functools
+
+@functools.lru_cache(maxsize=128)
+def web_lookup(url):
+    return urllib.urlopen(url).read()
+6.2 Factor out temporary contexts
+
+from decimal import Decimal, getcontext, setcontext
+
+old_context = getcontext().copy()
+getcontext().prec = 50
+print(Decimal(355)/Decimal(113))
+setcontext(old_context)
+#+RESULTS[5d974b2cec2851cee2e9776da8b34d14c6a8d3d4]:
+
+3.1415929203539823008849557522123893805309734513274
+6.2.1 Better
+
+from decimal import Decimal, Context, localcontext
+
+with localcontext(Context(prec=50)):
+    print(Decimal(355)/Decimal(113))
+#+RESULTS[d56ae8ef930e7ecfb083c26feb61a52f7b9c8b57]:
+
+3.1415929203539823008849557522123893805309734513274
+6.3 Opening and closing files
+
+f = open('README.org')
+try:
+    firstline = next(f)
+finally:
+    f.close()
+
+print(firstline)
+#+RESULTS[18ac74fe30c7313bc7271fde9de7cb2745111907]:
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+
+6.3.1 Better
+
+with open("README.org") as f:
+    firstline = next(f)
+
+print(firstline)
+#+RESULTS[c2c9a362de23488af96dbf95a12f309d9017e34e]:
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+
+6.4 Using locks
+
+import threading
+
+lock = threading.Lock()
+
+lock.acquire()
+try:
+    print('Critical section 1')
+    print('Critical section 2')
+finally:
+    lock.release()
+6.4.1 Better
+
+import threading
+
+lock = threading.Lock()
+
+with lock:
+    print('Critical section 1')
+    print('Critical section 2')
+6.5 Custom context managers
+
+6.5.1 Ignoring exceptions
+
+import os
+try:
+    os.remove('somefile.tmp')
+except OSError:
+    pass
+import os
+from contextlib import suppress
+with suppress(OSError):
+    os.remove('somefile.tmp')
+contextlib.suppress is included in Python 3.4 and later. In earlier versions it can be implemented as:
+
+from contextlib import contextmanager
+@contextmanager
+def suppress(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
+6.5.2 Output redirection
+
+import sys
+with open('help.txt', 'w') as f:
+    oldstdout = sys.stdout
+    sys.stdout = f
+    try:
+        help(pow)
+    finally:
+        sys.stdout = oldstdout
+from contextlib import redirect_stdout
+with open('help.txt', 'w') as f:
+    with redirect_stdout(f):
+        help(pow)
+contextlib.redirect_stdout is included since Python 3.4. In earlier versions use:
+
+import sys
+from contextlib import contextmanager
+@contextmanager
+def redirect_stdout(fileobj):
+    oldstdout = sys.stdout
+    sys.stdout = fileobj
+    try:
+        yield fileobj
+    finally:
+        sys.stdout = oldstdout
+7 Miscellaneous
+
+7.1 Class properties
+
+class Widget():
+    def __init__(self, width, position):
+        self.width = width
+        self.position = position
+
+w = Widget(1000, 200)
+print(w.width, w.position)
+7.1.1 Getter and setter
+
+class Widget():
+    def __init__(self, width, position):
+        self._width = width
+        self._position = position
+
+    def get_width(self):
+        return self._width
+
+    def set_width(self, new_width):
+        self._width = new_width
+
+    def get_position(self):
+        return self._position
+
+    def set_position(self, new_position):
+        if new_position < 0:
+            self._position = 0
+        elif new_position > self._width:
+            self._position = self._width
+        else:
+            self._position = new_position
+
+w = Widget(1000, 200)
+w.set_position(1200)
+print(w.get_width(), w.get_position())
+7.1.2 Better
+
+class Widget():
+    def __init__(self, width, position):
+        self.width = width
+        self.position = position
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, new_position):
+        if new_position < 0:
+            self._position = 0
+        elif new_position > self.width:
+            self._position = self.width
+        else:
+            self._position = new_position
+
+w = Widget(1000, 1200)
+print(w.width, w.position)

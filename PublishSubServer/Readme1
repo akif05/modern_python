@@ -1,0 +1,280 @@
+>>> print('The answer is \u0664\u0662 today')
+The answer is ٤٢ today
+>>> print('The Raymond Way(tm)')
+The Raymond Way(tm)
+>>> print('The Raymond Way (tm)')
+The Raymond Way (tm)
+>>> print('The Raymond Way\N{trade mark sign}')
+The Raymond Way™
+>>> s = 'L' + ch(246) + 'wis'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'ch' is not defined
+>>> s = 'L' + chr(246) + 'wis'
+>>> 
+>>> s
+'Löwis'
+>>> t = 'L' + chr(111) + chr(776) + 'wis'
+>>> t
+'Löwis'
+>>> [ord(c) for c in s]
+[76, 246, 119, 105, 115]
+>>> [ord(c) for c in t]
+[76, 111, 776, 119, 105, 115]
+>>> s == t
+False
+>>> import unicodedata
+>>> u = unicodedata.normalize('NFC', t)
+>>> t == s
+False
+>>> u == s
+True
+>>> import collections
+>>> Person = collections.namedtuple('Person', ['fname', 'lname', 'age', 'email'])
+>>> p = Person('Raym', 'Hett', 54, 'ak@gmail.com')
+>>> p
+Person(fname='Raym', lname='Hett', age=54, email='ak@gmail.com')
+>>> isinstance(p, tuple)
+True
+>>> len(p)
+4
+>>> a,b,c,d = 0
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: cannot unpack non-iterable int object
+>>> a,b,c,d = p
+>>> a
+'Raym'
+>>> b
+'Hett'
+>>> c
+54
+>>> d
+'ak@gmail.com'
+>>> p.lname
+'Hett'
+>>> p[2]
+54
+>>> p[0]
+'Raym'
+>>> # Sort data with bisect  search inside range
+... import bisect
+>>> cuts = [60, 70, 80,90]
+>>> grades = 'FDCBA'
+>>> grades[bisect.bisect(cuts, 76)]
+'C'
+>>> [grades[bisect.bisect(cuts, score)] for score in [76, 92, 80, 70, 69, 91, 99, 100]]
+['C', 'A', 'B', 'C', 'D', 'A', 'A', 'A']
+>>> # bisect is used to search for the ranges
+
+>>> sorted([10, 5, 20])
+[5, 10, 20]
+
+>>> sorted([10, 5, 20], reverse=True)
+[20, 10, 5]
+>>> sorted[10, 5, 20] + [1, 11, 9, 26])
+  File "<stdin>", line 1
+    sorted[10, 5, 20] + [1, 11, 9, 26])
+                                      ^
+SyntaxError: invalid syntax
+>>> sorted([10, 5, 20] + [1, 11, 9, 26])
+[1, 5, 9, 10, 11, 20, 26]
+>>> 
+>>> a = [1, 11, 25]
+>>> b = [5, 10, 20]
+>>> c = [7, 15, 21]
+>>> sorted(a+b+c)
+[1, 5, 7, 10, 11, 15, 20, 21, 25]
+>>> # better is to use merge
+... from heapq import merge
+>>> list(merge(a+b+c))
+[1, 11, 25, 5, 10, 20, 7, 15, 21]
+>>> it = merge(a+b+c)
+>>> next(it)
+1
+>>> # pull the lovest 
+... from itertools import islice
+>>> list(islice('abcdefghi', None, 3))
+['a', 'b', 'c']
+
+>>> S='abcdefgi'
+>>> list(islice(S, 3))
+['a', 'b', 'c']
+>>> list(islice(S, None,3))
+['a', 'b', 'c']
+>>> list(islice(S, 2 ,3))
+['c']
+>>> list(islice(S, 0, 2 ,3))
+['a']
+>>> list(islice(S, 0, 2 ,4))
+['a']
+>>> list(islice(S, 0, 4 ,2))
+['a', 'c']
+>>> # 0 is start point, next is begin from , and next is go up to
+... # islice the merge and capture the first 3
+... it = merge(a, b, c)
+
+>>> list(islice(it, 3))
+[1, 5, 7]
+>>> # isclice in combination with merge can be used
+... # to go over large data and slice it in a go
+... s = 'he'
+>>> t='llo'
+>>> u='hello'
+>>> v=s+t
+>>> u
+'hello'
+>>> u==v
+True
+>>> it(u)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'generator' object is not callable
+>>> it(v)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'generator' object is not callable
+>>> id(u)
+4518749160
+>>> id(v)
+4523777528
+>>> import sys
+>>> u = sys.intern('hello')
+>>> v = sys.intern(s+t)
+>>> id(u)
+4518749160
+>>> id(v)
+4518749160
+>>> # Using sys.inter allows us to store 'hello' in one place 
+... # and use it for multiple vars
+... u is t
+False
+>>> u
+'hello'
+>>> v
+'hello'
+>>> u is v
+True
+>>> id(u)
+4518749160
+>>> id(v)
+4518749160
+>>> 
+>>> import random
+>>> random.uniform(1000, 1100)
+1077.80338536726
+>>> random.triangular(1000, 1100)
+1082.0907626174353
+>>> random.expovariate(1/5)
+10.582682169120154
+>>> random.expovariate(1/5)
+4.934604400333133
+>>> random.expovariate(1/5)
+4.931252496729897
+>>> random.expovariate(1/5)
+2.8189916093631204
+>>> random.expovariate(1/5)
+0.5964523124660309
+>>> random.expovariate(1/5)
+2.745717849886223
+>>> random.expovariate(1/5)
+7.160251900102412
+>>> random.expovariate(1/5)
+2.508844243064988
+>>> 
+>>> import time
+>>> x=10; print(x**2)
+100
+>>> time.sleep(5); print('done')
+done
+>>> time.time()
+1545793240.674465
+>>> time.ctime()
+'Wed Dec 26 03:00:47 2018'
+>>> 
+>>> import hashlib
+
+>>> ## We need to encoded it first
+>>> hashlib.md5('the taile of two cities'.encode('utf-8'))
+<md5 HASH object @ 0x10d58db20>
+>>> hashlib.md5('the taile of two cities'.encode('utf-8')).digest()
+b'\x1b\x86^n\x10Q\xa8\xa8\xeeS\x92t\xf8\xb1c\x9e'
+>>> 
+>>> hashlib.md5('the taile of two cities'.encode('utf-8')).hexdigest()
+'1b865e6e1051a8a8ee539274f8b1639e'
+>>> hashlib.sha1('the taile of two cities'.encode('utf-8')).hexdigest()
+'df643b738844e6844217008b7d85f416ea10608f'
+>>> hashlib.sha2('the taile of two cities'.encode('utf-8')).hexdigest()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: module 'hashlib' has no attribute 'sha2'
+>>> hashlib.sha256('the taile of two cities'.encode('utf-8')).hexdigest()
+'adceb557fc9fdc3acd961ec6604acdc8e4146a9b804c206518274093ba087d41'
+>>> hashlib.sha512('the taile of two cities'.encode('utf-8')).hexdigest()
+'51b050de23074cd6b54249fddf5edf625ebc64f27aaa17e93db0bba46f11c901bc0c1b80d487ce910af9a0bae2dcb40d9f6b9c1ba99d27113180741e20c78bb2'
+>>> 
+>>> 
+>>> # start the with the bites we want
+... b='The tale of two cities'.encode('utf-8')
+>>> hashlib.sha512(b).hexdigest()
+'bbd0129997233fc6aec15b969c98d84fee6573281009caed5870bf97c9a1249b7a5366ba76dfed2578bb881ffef962fdc3fad31359dccceadd323746badd52c9'
+>>> 
+>>> b=hashlib.sha512(b).digest()
+>>> b=hashlib.sha512(b).digest()
+>>> b=hashlib.sha512(b).digest()
+>>> b=hashlib.sha512(b).digest()
+>>> b=hashlib.sha512(b).digest()
+>>> # This is doing hash of hash of hash
+... # Better way is to use folowing
+>>> h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000)
+>>> h
+b'\x91\xde\xb8\x9e\xa1P\n\xf8\x0b\xd6\xaa\x98\xce\x9cq5\xdd\xd5i\x1a\xd9\xb3:\x05\x98\xfa/\xfb\x90\xb0\xceV'
+>>> h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000).digest()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'bytes' object has no attribute 'digest'
+>>> 
+>>> h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000)..hexdigest()
+  File "<stdin>", line 1
+    h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000)..hexdigest()
+                                                                   ^
+SyntaxError: invalid syntax
+>>> h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000).hexdigest()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'bytes' object has no attribute 'hexdigest'
+>>> h = hashlib.pbkdf2_hmac('sha256', b'p', b'sala tphrase', 1000)
+>>> s = 'the quick'
+>>> t = 'brown fox'
+>>> s+t
+'the quickbrown fox'
+>>> s = 'the quick brown'
+>>> t = ' fox'
+>>> s+t
+'the quick brown fox'
+>>> t = 'brown fox'
+>>> s = 'the quick '
+>>> repr((s, t))
+"('the quick ', 'brown fox')"
+>>> s = 'the quick brown'
+>>> t = ' fox'
+>>> repr((s, t))
+"('the quick brown', ' fox')"
+>>> los = ['raymond', 'hetting', 'likes', 'python']
+>>> # join the list in a string
+... ' '.joing(los)
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+AttributeError: 'str' object has no attribute 'joing'
+>>> ' '.join(los)
+'raymond hetting likes python'
+>>> ''.join(los)
+'raymondhettinglikespython'
+ 
+
+
+############################################# Part 1 ###############################################
+- [Instructor] In this lesson we're going to do all the preparation necessary to make a publisher/subscriber service. You've already laid a really solid foundation up to this point and now we just want to cover some extra pieces that we're going to need. We'll talk about Unicode normalization, practice making name tuples, also we'll have to use the reverse and key arguments, the sorted, bisect and one that you might not have used before, which is merge. We'll use itertools islice to chop off data from data streams. We'll use sys.intern to conserve memory space. A reminder from the first lesson, random expovariate, which is normally used to model arrival times but can also be used to create variable length response times, and time delays in a web service. We'll show time sleep and time time. In hashlib, I'll show off a couple of popular patches, sha 256, sha 512. And a wonderful tool that has an unpronounceable name, PBKDF2 HMAC, which represents the state-of-the-art in hashing technology and is a best practice. We'll show how to get the repr of a tuple, how to join strings together floor division, the ternary operator, and a unique feature of Python, that is And and Or short-circuiting boolean operators will return a value whether there's a boolean. And with that preparation in place, we'll be able to rapidly make a publisher subscriber service, we'll be able to express really big ideas with only a little amount of code. All right, let's go ahead and lay the groundwork. First of all, let's talk about Unicode. Unicode will allow us to print out regular ASCII characters, but also some more interesting characters like "the answer is backslash u0664, backslash u0662 today". Those are Arabic-ending digits to print the number of 42. One thing I don't like is having these magic constants in our code, and in order to balance that out, what we can do is use the names for the Unicode characters, for instance, how do I like to teach, it's the Raymond way. So unique that perhaps, I ought to trademark it. But see, that looks very 1980s. How do we fix it? A little bit of Unicode will help, I can collapse it in and use a backslash N to use a named Unicode code point, perhaps a trademark sign, which is a clearer way of making exactly the same string. One of the challenges of Unicode is sometimes there's more than one way to make the same string. There's a Core developer whose name is Martin von Löwis and one way to spell his name is by using code point 246. Martin von Löwis built your Windows distributions, is a famous Python and Core developer and has contributed an enormous amount to the language. But he has more than one way of inputting his name. He could also use 776 combined with code point 111. Let's see how these two strings look. We'll print s, Martin von Löwis, and print t. Those two strings look exactly the same. However, if we list out all of their components, the ord of a character, for every character in s, and the ord of the character for every character in t, you'll see that t is a little bit longer and that s is a little bit shorter, and even though they visually look the same, they're actually distinct strings and are not equal to each other. So if Martin von Löwis was one of your users in a system and he typed in his name in one example and then typed in his name using another technique for another example, you might end up not finding his name in the system. And it would be mysterious to you because the two look like they're the same, like they should be there. So there's a technique for correcting this and it's in Unicode data module, and it's called normalization. U is equal to Unicode data, normalize, and there's a couple styles of normalization, the one that shrinks is NFC, and apply that to t. With that transformation in place, U is now the same as the original s. And so, typically, when you're getting in Unicode data that you're going to have to look up later, you should always normalize it first, that way the lookups will match. Next up is name tuples. Name tuples are very easy to create. They are in the collections module. We've already used them several times, and the idea is, instead of a tuple where the fields aren't self-explanatory, we would like to be able to look the fields up by name. So name tuple is a factory function that creates new classes. The name of this class is person, and its field names are first name, last name, age and email address. I can go ahead and create a person object, perhaps myself, person, f name Raymond, Hettinger. Being a subclass of tuple, you can expect that a name tuple will have tuple-like properties. It has a len, it's unpackable, just like regular tuples. It's sliceable just like regular tuples, and it's indexable like regular tuples. The differences are that it has a better repr, the representation clearly identifies what all of the fields are, and you can also access the fields by name. This goes a long way towards making your code self-documenting and making it beautiful. All of the named accesses are much clearer than the equivalent index accesses. My recommendation is to go through all your code, and wherever you're passing around tuples that aren't self-explanatory or where the index lookups aren't making perfect sense, add in a name tuple. Next topic is working with sorted data and with bisect. Bisect is a particularly interesting module, and a lot of people don't realize exactly what it is for. They think that bisect is about searching for a particular item. But we have a better searching tool, the better searching tool is hashtables implemented in the form of dictionaries. So, if you have to look something up, you just look it up in a dictionary. It's very fast, faster than bisect, which raises the question, what is bisect for? Bisect is all about searching inside ranges. When we look inside ranges, we're looking at the gaps in between all of the cut points. If you take a piece of rope and you cut it one time, you get two pieces. If you cut it two times, you get three pieces. The number of cuts is always one greater, or the number of sections of ropes is always one greater than the number of cuts. So an example would be, here are some cut points. A score of 60 on a test, a 70 on a test, an 80 on a test or a 90 on a test. If you cut the piece of rope four times, you get five pieces, so the pieces that correspond to these cuts are a grade of F, D, C, B and A. Notice how we have one more grade than cut points. What bisect does is efficiently search the cut points. So bisect bisect, we go to look through the cut points and look up a particular grade for, you make a 76 on the test and you'd like to know what grade is associated with that 76. This can be done in a list comprehension so that you can grade some papers. You've got a score, for score in, some sample grades. We have a 76, a 92, an 80, a 70, a 69 and 99 and a 100. Let's see, what I've just done wrong here, we have the bisect for score in these grades, I've just closed the score. Just closed the bisect, ah, we can see the problem here. We need to close the indexed lookup. Make the screen a little bit wider and you can see the grades on these papers range from C to A. I picked these numbers for a reason so that we could see that 80 was at a cut point and bisect, by default, switches to the right-most grade after the 80, so at 80 and 81 we'll get exactly the same scores. If needed, bisect has a bisect left option which will push to the left side of the cut. So what do you use bisect for? Bisect is mainly used for searching ranges. You want to search tax tables, for example, bisect is perfect for that. In the US income tax brackets, let's go take a look at some of these tax brackets. It's a table showing ranges of incomes and if your income falls between these two values, your tax rate is 25%, our marginal tax rate, for example. What we could do is make a dictionary that listed every value between 37,650 and 91,150 and do lookups that way. But if you just want to store the cut points or break points, bisect is perfect for searching this. We say bisect is all about searching ranges and not searching for particular values. Now let's look at sorting. Sorting takes a sequence that is non-sorted and, of course, ranges it in sorted order. So, in this case, we have our one list that's being ranged in ascending order. What'd be interesting is, what if we had several lists to put together? Perhaps another one that is a list of 1, 11 and 25. Well, the first step we're doing is concatenating, which makes a brand new list, and then sorted goes through and attempts to put these in sorted order. Which is a perfectly reasonable operation if I need to take two separate unsorted lists, combine them together and then sort the aggregate. That said, suppose the lists are already sorted. I had a series of lists that had 1, 11 and 25, which is already sorted, and I had a second list, 5, 10 and 20, and a third list, 2, 15 and 21. And I would like to combine them together and sort them. One way to do it is to aggregate the list and then run sort on them, but as these lists get larger and larger, this is somewhat inefficient, because we're not taking advantage of the fact that we already know that the sub-lists are in sorted order. Effectively, what we'd like to do is an operation called a merge. And we've got a tool to do that in the heapq module. From heapq, import, merge. If I were to list the merge of a, b and c, that would combine them all together. This is far more efficient than sorting. One of the interesting things is merge works left to right, it creates an iterator, and the iterator doesn't actually do the merging until we ask for a value. So, the moment I ask for next, it looks for the lowest value out of the three lists. It advances the pointer on the first list up to the 11, and the only three things it has in memory is the 2, the 5 and the 11. Out of those, the 2 is smallest. It then advances the pointer on the next list to the 15. Why would this matter? Well, suppose these lists were very, very, very long, but known to be sorted, and suppose you only wanted the first few elements of the combined lists. What we could do is use merge and then next off just the first elements that we needed. So, if you imagine these lists are long, this is a very efficient way to pull out the lowest elements in the combination. We'll be needing that in the publisher/subscriber service. Now, pulling these off one at a time with next is reasonable if all we're doing is getting one or two at a time. But if we want more of them, we can use the in the itertools module, islice. Islice is a wonderful tool. It works just like regular slicing, although it only goes in a forward direction, and it works over iterators. Let me demonstrate this with a regular iterable. Islice, with only one argument, will give us a stop point. A, B, C, D, E, F, G, H, I, I want the first three elements. I can also tell it another way that says start at the beginning, go to the end. So none is the default for the start point. But I could also tell it, give me between two and four. Further, it can do a start, stop and step. Start at the beginning, go up to four and count by twos. This is just like the regular slice notation. The part that's different, though, is it can consume an iterator and produce an iterator, meaning it doesn't have to eat all of the values on the way in. This'll be very useful with our list. So, when we'd made a merge, that created an iterator. A generator is a kind of iterator that runs code on demand. Now I would like the first three elements of the merge. What I'd like to do is islice the merge, and say, capture the first three. What's nice about this is all three lists don't have to be combined and resorted. Instead, it works left to right over the lists and if the lists are very long, it will pull out just the elements we need. This'll be really important for us when we're making web services or when you're running data queries. Consider when you run a query on a search engine, and it tells you there's 200 thousand matches for your query. Do you want all 200 thousand displayed? No, and it would be inefficient for the search engine to actually produce all 200 thousand when you're only going to look at the first 10. So a reasonable thing to do is to get an iterator over the search query, run an islice over it, display the first 10 results. And the user selects the next page, say I want the next 10 results. So it's quite common, when you have data arranged to where the most relevant information comes first and least relevant comes later. Either arranged by time, newest things first, oldest things first, you can use islice to capture that data stream and capture just the pieces that you need. So islice will work together with merge to do a just in time sort as we need information over potentially very large data sources. The next one up is going to be interning of strings. For the most part, because strings are immutable, it doesn't matter whether a string is mentioned multiple times in memory or only once. From a user's point of view, two different strings in memory that have the same contents are treated exactly the same, which raises the question, if they're exactly the same and they're immutable, why have more than one? What interning does is it folds two cases together into a single case, and it's mainly used to save memory. I'll build an he and separate, an llo. And combine them together and make a hello. We'll compare that to s plus t. U and v look exactly the same. U and v are equal to each other. But the identities of the objects are, in fact, two different strings. So we can enter the notion of string interning, and it's in the sys module. And the idea is when we go to make u, we can go interning. This says, save an example of it and be able to look it up later and make sure it is the only example of this string. Then, when we build v, we can intern that one as well. That will look to see if we already have an existing hello, and if so, it will reuse that one. Now, not only are u and v equal to each other, u and v are the same object in memory. This doesn't matter so much for a string like a hello, but if you have usernames, for example, you don't want the same username appearing many different times in memory. In fact, whenever you're building table-style information, perhaps a list of name tuples, the recurring values in there, you can save memory by interning each of the values.
+
+############################################# Part 2 ###############################################
+ - [Instructor] And the next one up is one that we'd covered briefly before and that was expo variant. And it's in the random module. There were many distributions here. You'll remember reuniform distribution. You'll remember triangular distribution, which was biased a little bit more towards the center. But there's also expo variant. Expo variant is very commonly used in simulations to simulate the arrival time of customers or users into a service. And it's interesting, we typically put the reciprocal of the arrival rate. So, if you service five visitors per second, the expo variant on average will come out to be about one fifth. And so, if you put one fifth as an input the output will average around five. One the other hand, if you put in five, the average will be the reciprocal of five and will come out very close to point two. And so we're going to use this with time delays. The very next topic is the time module. In Python, you can put two simple statements on one line. We don't often do that because it impairs readability but it'll be nice for this demo. And in this demo, I'll do a time sleep for five seconds and then print out done. Use the traditional counting technique. One Mississippi, two Mississippi, three Mississippi, four Mississippi, five Mississippi. It doesn't work with any other state, don't try this with Texas. Now, if a computer programmer asks you what time it is, you should give them the number of seconds past the epoch. Which is a floating point number. If a normal person, a non-programmer, asks you what time it is, you should give them the clock time, which is the string. That's a brief tour of the functions that we're going to need for the time module. Next up, is hashlib. And the idea is we want to make cryptographically secure hashes. There's a number of tools inside, including one that's obsolete but is still in common use, which is called MD5. The input to hashlib needs to be a string of bytes not an actual string. So if I were to put in the tale of two cities, in Python 3, this is a unicode string, and MD5 works on a individual series of bytes, so would actually need to be encoded first. So it's quite common to take a string from a user, encode it perhaps in UTF8, which will convert it to an array of bytes and that creates a hashed object. The traditional way to get the output is to get a digest and that gives us a series of bytes. The result is a little hard on the eyes, if you want to make it more human readable, you can make a string that is twice as long but more human readable with a hex digest. That said, while MD5 is still in common use there's no longer considered as secure as it once was. And so people have started moving to things like A SHA-1. Even that is no longer strong enough for our taste anymore. And so, we can do better. A SHA-256 will give you a 256 bit hash sum. And if you want to really go all out, you can do SHA-512. One of the problems will all of these hash functions is even if they were designed to be one way functions, they're quite easy to compute forward. So easy that it's possible for someone with a GPU to run a forward calculation many times, guess at your password until they've got a match. And in fact, what we like to do is slow them down. Which raises the question, how do you slow down this function? You could put it in a time delay but a person trying to hack your hash will simply take the time delay out. So what would be a good technique to slow it down. One possible idea is to start with the bytes that we want to hash, run them through a SHA-512, and get the digest, which is very fast and save it back to that string. Now run this multiple times. So you're doing the hash of the hash of the hash, of the hash. There's a standard that involves doing this many times and has some bright ideas inside like constantly dimpling the outputs so that we're not feeding the exact same input into the same output. And then making sure that the repeated application doesn't fall into canal, so it zars all of the intermediate results together. And so there's a name for this and it's the kind of name that only a cryptographer could think of. So if I had this as a passphrase and I wanted to hash it, I would use hashlib, pbdk or kdfhf2.hmac, I can't even pronounce it but fortunately I have a tab completion to take care of the work for me. And I can tell it which hash I want to use, perhaps a SHA-256. What is our passphrase and then there's this interesting notion called salt. You don't want two different companies making the same password and hashing them the same way because if one person's unhashed file got out, it would enable you to crack another. So we'd like some type of company specific salt. One thing you can use is some little catchphrase as long as it is unique. Some phrase. That said, it is better to get a random string and use it as a salt. For the time being, I'm going to use some phrase and I can tell it a number of iterations. And a 100,000 is a good number. Looked like I didn't spell SHA correctly, there's no hyphen SHA. And so this did a 100,000 iterations after salting the password, and the idea is we would get a completely different result if there were different salt. Other phrase. So that two companies don't get the same value. The next one is showing the ripper of a tuple. Suppose I had two strings that I wanted to bring together. Perhaps string S, which is "the quick" and string T, "brown fox." One way to bring them together, is to concatenate them. However, if I'm trying to use this as part of piece of security, where I want to combine two different tokens, I'm worried that someone might be able to hack this token by changing the first to "the quick brown" and the second one to just "fox." So the combination becomes the same. We're going to use that in the future for our authentication and what we'd like to do is not have these produce exactly the same string. The secret is going to be to take these two strings and combine them using the ripper of a tuple. I can form a tuple. S and T, and then take the ripper of that tuple, which will convert it into a string and the string looks like how we would have made the tuple. Notice that there's some quotes and commas in between the two elements. So now I go to hack it and see if we could reproduce the same result with two different strings and the ripper, and in this case, is a different ripper in part because this split point is preserved. So we'll use that in the near future as well. The next topic is how to join strings together. I have a list of strings, raymond, hettinger, likes, python. And I want to combine them together. The technique is to use join and I can tell it to join them with a space in between. I can also join with no spaces in between, just smashing all the characters together. Join is the opposite of a split. In Python 3, regular division divides like in a calculator. To get floor division that rounds down, two slashes will round down and produce an integer value. The next tool in our toolbox is going to be the ternary operator. Which is also called a conditional expression. Ternary means three. So unary operator is a plus like plus X or minus X. The minus is a unary operator because it takes only one argument. A binary operator takes two arguments like x and y. So these are all binary operators, ternary means three. So the operator will take three arguments. Conditional expression means the outcome of the expression depends on a condition. So if a score of a test is 70, we can say that you passed the test if the score is greater than or equal to 70. Otherwise, you fail the test. On the other hand, if the score drops a little bit, that switches to a failing grade. So the syntax is, we have the positive result, an if, some condition, an else, a negative result. A relating topic is Python's "and" and "or" Boolean short circuit operators. Most people know the true and true would be true, and that true and false would be false. And if you think about it, even if we know the first one is true, we still have to check the second one to determine the outcome. While the interesting thing's though is if the first one is false, we don't even have to examine the second one to determine whether it's true. So if you see a false here, this one doesn't get evaluated so its called a short circuiting operator. And so we could use this with expressions like this, is "3 less than 10" and is "10 less than 20?" That's a true and true. So many languages have a short circuiting and an "or" operator just like Python does. However, ours is somewhat unique. The Boolean value of "hello", is true because it's a non-empty container. If it has a length greater than zero, then its value is true. Accordingly, you might expect that this returns true, and in fact it does because "hello" is true. But if we invert it, we're going to get a surprise. Swapping the two variables, it returns the variable that determines the value of the expression. It returns the "hello", it returns a true value rather than true itself. That was a little bit of a surprise to me when I came to Python, I had never seen any other language that behaved exactly like that. So the Boolean value of an empty string is false because the length of that string is zero. So any container has a false value. So suppose I put a blank string and "hello." what is the value going to be. Well the first one is false and since it's false, we don't have to examine the very next element so it returns the false value. Which is the empty string. So how are Pythons "and" and "or" short circuiting operators different from other languages? They work exactly the same except, they don't return true or false, they return the value that made it true or false taking into account short circuiting. So one place that we see this used is when we have optional arguments in a function def f, x and s is equal to none. Occasionally you'll see people write code like this, if s is some true value, keep it, otherwise, use some type of default and will print x and s. The idea is that if I call this with two values, the sum value will go in for s, sum value is true because it's non-empty, and so we will print out the ten and the sum value. But if I passed it at a false value, like none, if would use the default. So this is reasonably common in the Python world and it's something that you don't expect when you come from another programming language. And so we'll be making a classic and idiomatic use of that coming up shortly. This lesson was to prepare us to make a publisher subscriber service. We're just making sure we had all the core Python skills necessary. You'll learn that whenever you're going to take a string from a user, store it and then look it up later, you'll want to know normalize the string. Because unicode presents more than one way to spell the same string. You've learned that anywhere that you've got tuples that aren't self describing, are where field access with square brackets and an index isn't clear, you can use a name tuple quite easily to beautify your code. You've learned that sorted works great with bisect. Bisect searches sorted list and you've learned that if you're just looking up specific items, using bisect is not what you want. Instead you'd prefer a hash table. What bisect is good for is searching ranges. If you have several sorted lists, and you want to combine them together, a great tool is merge. It does far less work than a sort because it takes advantage of the inputs that are already sorted. Further we learned that you could use islice and next to pull up values from an iterator. This works perfect with a merge. If you have several large sorted lists and want to effectively combine them, sort them and pull out the first few elements. One way is add them together, run sort, and slice off the first few values. But that does far too much work, the better way is to run merge, and then use a islice to pull off the first few values. That way, it only pulls out the values it needs rather than the entire list. You've learned that a technique for saving memory is to use intern. It's mainly used when you're going to have many, many, many instances of exactly the same string. And you don't want them to occupy different places in memory. We had a little reminder of what random expo variate does. It is used for simulating arrival times or if you like a random variable that is occasionally large but is usually small. An expo variate is a perfect choice. We got a little reminder of how time sleep works. It sleeps, pausing the system, time time, gives you the number of seconds past the epoch, which is the ideal way to store the time. And then when you're displaying to end users the way they would prefer to see it, is the clock time. We did a little tour of a hashlib, and learned that while it supports SHA-1 and MD5, those are no longer considered as secure as we'd like. And so people tend to use now SHA-256 or SHA-512. That said, those functions are way too fast. Because they're fast, it's easy to run them in a forward direction and guess at passwords. So one way to slow them down is to iterate them. There's a standard for that. Pbkdf2_hmac. And what it will let you do is specific some salt and a way to iterate all of the applications of the x digest. In addition we got some of the basics of Python, how to get ripper of tuple, join strings together, floor division and the ternary operator. Which I think is particularly beautiful in Python as compared to other languages. And then we learned something unique about Python. That its "and" and "or" short circuiting operators work differently than other languages. They don't return true or false, all they do is return the value that made them true and not false. And we saw a use case for that, where you pass an optional arguments letting it default to none and the use "or" to change it to it's default value. With this preparation in hand, you're ready for the next lesson where we can go build a publisher's subscriber service and use modern Python to describe some big ideas with only a little code.
